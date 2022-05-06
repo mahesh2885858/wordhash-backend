@@ -45,5 +45,4 @@ app.use("/admin", Router);
 app.get("/", (req, res) => {
   res.send("hoo");
 });
-app.listen(8080, () => console.log("app is running on port 8080"));
-// app.listen()
+app.listen(8000, () => console.log("app is running on port 8000"));
