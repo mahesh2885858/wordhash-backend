@@ -1,17 +1,16 @@
-import AdminModel from "../Scheema/Scheema.js";
+import AdminModel from "../models/AdminScheema.js";
+import ClueCardModel from "../models/ClueCardScheema.js";
 const AdminController = {
   addAdmin: async (req, res) => {
-    console.log("first");
-    res.send("hi there");
-    // try {
-    //   const { name, username, email, password } = req.body;
+    try {
+      const { name, username, email, password } = req.body;
 
-    //   const admin = new AdminModel({ name, username, email, password });
-    //   const result = await admin.save();
-    //   res.send(result);
-    // } catch (err) {
-    //   res.send(err);
-    // }
+      const admin = new AdminModel({ name, username, email, password });
+      const result = await admin.save();
+      res.send(result);
+    } catch (err) {
+      res.send(err);
+    }
   },
   adminLogin: async (req, res) => {
     try {
@@ -44,6 +43,16 @@ const AdminController = {
       } else {
         throw "please login again";
       }
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  uploadImages: async (req, res) => {
+    try {
+      const { word, date, imageurl } = req.body;
+      const newClueCard = new ClueCardModel({ word, date, imageurl });
+      const data = await newClueCard.save();
+      res.send(data);
     } catch (error) {
       res.send(error);
     }

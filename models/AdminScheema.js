@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const reqString = { type: String, required: true };
+export const reqString = { type: String, required: true };
 const AdminScheema = new mongoose.Schema({
   username: reqString,
   password: reqString,

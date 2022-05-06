@@ -6,7 +6,7 @@ import bodyparser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
-import Router from "./routes.js";
+import Router from "./Routes/routes.js";
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
 const app = express();
@@ -22,7 +22,7 @@ app.use(
     origin: "http://localhost:3000",
   })
 );
-app.use(cookieParser);
+app.use(cookieParser());
 app.use(bodyparser.urlencoded({ extended: true }));
 const store = new mongodbstore({
   uri: process.env.MONGO_URL,
@@ -40,7 +40,7 @@ app.use(
     },
   })
 );
-// app.use("/admin", Router);
+app.use("/admin", Router);
 
 app.get("/", (req, res) => {
   res.send("hoo");
