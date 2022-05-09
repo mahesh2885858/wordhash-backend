@@ -32,7 +32,7 @@ const AdminController = {
         throw "need username and password";
       }
     } catch (err) {
-      res.send(err);
+      res.status(400).send(err);
     }
   },
   retainAdminLogin: async (req, res) => {
@@ -49,7 +49,7 @@ const AdminController = {
     }
   },
   uploadImages: async (req, res) => {
-    const reqName = req.files.map((file) => {
+    const reqName = req.files?.map((file) => {
       const buffer = fs.readFileSync(file.path);
       const base64 = buffer.toString("base64");
       return { image: buffer };
@@ -63,7 +63,7 @@ const AdminController = {
       const data = await newClueCard.save();
       res.send(data);
     } catch (error) {
-      res.send(error);
+      res.status(400).send(error);
     }
   },
   getImages: async (req, res) => {
