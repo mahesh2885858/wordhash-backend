@@ -1,5 +1,6 @@
 import AdminModel from "../models/AdminScheema.js";
 import ClueCardModel from "../models/ClueCardScheema.js";
+import fs from "fs";
 const AdminController = {
   addAdmin: async (req, res) => {
     try {
@@ -48,11 +49,49 @@ const AdminController = {
     }
   },
   uploadImages: async (req, res) => {
+    const reqName = req.files.map((file) => {
+      const buffer = fs.readFileSync(file.path);
+      const base64 = buffer.toString("base64");
+      return { image: buffer };
+    });
     try {
-      const { word, date, imageurl } = req.body;
-      const newClueCard = new ClueCardModel({ word, date, imageurl });
+      const newClueCard = new ClueCardModel({
+        word: req.body.word,
+        date: req.body.date,
+        images: reqName,
+      });
       const data = await newClueCard.save();
       res.send(data);
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  getImages: async (req, res) => {
+    try {
+      const imagedata = await ClueCardModel.findById(
+        "6276127f24351b833bcbd803"
+      );
+      if (imagedata) {
+        res.send(imagedata);
+      } else {
+        throw "the images is not found";
+      }
+    } catch (err) {
+      res.send(err);
+    }
+  },
+  updateEntry: async (req, res) => {
+    console.log(req.body);
+    try {
+      const deleteone = await ClueCardModel.findByIdAndUpdate(
+        req.body.entryId,
+
+        {
+          $pull: { images: { _id: req.body.imageId } },
+        },
+        { new: true }
+      );
+      res.send(deleteone);
     } catch (error) {
       res.send(error);
     }

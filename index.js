@@ -6,15 +6,18 @@ import bodyparser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
+import multer from "multer";
 import Router from "./Routes/routes.js";
+import AdminController from "./controllers/AdminController.js";
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
 const app = express();
+app.use(express.json());
+app.use(bodyparser.urlencoded({ extended: true }));
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("its connected mongo"))
   .catch((err) => console.log(err));
-app.use(express.json());
 
 app.use(
   cors({
@@ -22,8 +25,8 @@ app.use(
     origin: "http://localhost:3000",
   })
 );
+
 app.use(cookieParser());
-app.use(bodyparser.urlencoded({ extended: true }));
 const store = new mongodbstore({
   uri: process.env.MONGO_URL,
   collection: "adminSessions",
@@ -40,9 +43,11 @@ app.use(
     },
   })
 );
+// multer setup
+// app.post("/upload", upload.single("clue-card"), AdminController.uploadImages);
 app.use("/admin", Router);
 
 app.get("/", (req, res) => {
-  res.send("hoo");
+  res.send("hlo");
 });
 app.listen(8000, () => console.log("app is running on port 8000"));
