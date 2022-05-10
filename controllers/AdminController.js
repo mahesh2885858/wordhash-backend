@@ -96,5 +96,17 @@ const AdminController = {
       res.send(error);
     }
   },
+  getAllWords: async (req, res) => {
+    try {
+      const data = await ClueCardModel.find({});
+      if (data) {
+        res.status(200).send(data);
+      } else {
+        throw "the data is not found";
+      }
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  },
 };
 export default AdminController;

@@ -25,4 +25,5 @@ Router.post(
 );
 Router.get("/getimages", AdminController.getImages);
 Router.put("/updateentry", AdminController.updateEntry);
+Router.get("/getallwords", AdminController.getAllWords);
 export default Router;
