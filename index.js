@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import MongoDBStore from "connect-mongodb-session";
-import bodyparser from "body-parser";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
@@ -12,8 +12,9 @@ import AdminController from "./controllers/AdminController.js";
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
 const app = express();
-app.use(express.json());
-app.use(bodyparser.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("its connected mongo"))

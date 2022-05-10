@@ -80,7 +80,7 @@ const AdminController = {
       res.send(err);
     }
   },
-  updateEntry: async (req, res) => {
+  removeImage: async (req, res) => {
     console.log(req.body);
     try {
       const deleteone = await ClueCardModel.findByIdAndUpdate(
@@ -108,5 +108,28 @@ const AdminController = {
       res.status(400).send(error);
     }
   },
+  updateEntry: async (req, res) => {
+    console.log(req.body)
+    console.log(req.files)
+    const word = req.body.word
+    const date = req.body.date
+    const reqfiles = req.files?.map((file) => {
+      const buffer = fs.readFileSync(file.path);
+      const base64 = buffer.toString("base64");
+      return { image: buffer };
+    });
+    try {
+      const data = await ClueCardModel.findByIdAndUpdate(req.body.entryId,
+        { word: word },
+        { new: true })
+
+      res.status(200).send(data)
+
+
+    } catch (error) {
+      res.status(400).send(error)
+    }
+  }
+
 };
 export default AdminController;

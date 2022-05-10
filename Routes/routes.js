@@ -6,6 +6,7 @@ import checkAdmin from "../middleware/checkAdmin.js";
 // multer setup
 export const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log("first step")
     cb(null, "uploads");
   },
   filename: function (req, file, cb) {
@@ -24,6 +25,7 @@ Router.post(
   AdminController.uploadImages
 );
 Router.get("/getimages", AdminController.getImages);
-Router.put("/updateentry", AdminController.updateEntry);
+Router.put("/removeimage", AdminController.removeImage);
+Router.put("/updateentry", upload.array("clue-card", 4), AdminController.updateEntry);
 Router.get("/getallwords", AdminController.getAllWords);
 export default Router;
