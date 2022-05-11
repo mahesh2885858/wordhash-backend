@@ -6,15 +6,13 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
-import multer from "multer";
 import Router from "./Routes/routes.js";
-import AdminController from "./controllers/AdminController.js";
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
 const app = express();
-app.use(express.json({ limit: '10mb' }));
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("its connected mongo"))
@@ -27,7 +25,7 @@ app.use(
   })
 );
 
-app.use(express.static('uploads'))
+app.use(express.static("uploads"));
 app.use(cookieParser());
 const store = new mongodbstore({
   uri: process.env.MONGO_URL,
@@ -45,8 +43,6 @@ app.use(
     },
   })
 );
-// multer setup
-// app.post("/upload", upload.single("clue-card"), AdminController.uploadImages);
 app.use("/admin", Router);
 
 app.get("/", (req, res) => {

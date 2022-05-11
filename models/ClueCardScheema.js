@@ -9,7 +9,6 @@ const ClueCardScheema = new mongoose.Schema({
   word: reqString,
   date: reqString,
   images: [imageScheema],
-  // images: [imageScheema],
 });
 const ClueCardModel = mongoose.model("cluecard", ClueCardScheema);
 export default ClueCardModel;

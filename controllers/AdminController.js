@@ -1,6 +1,5 @@
 import AdminModel from "../models/AdminScheema.js";
 import ClueCardModel from "../models/ClueCardScheema.js";
-import fs from "fs";
 const AdminController = {
   addAdmin: async (req, res) => {
     try {
@@ -49,20 +48,14 @@ const AdminController = {
     }
   },
   uploadImages: async (req, res) => {
-
     const reqName = req.files?.map((file) => {
-      // console.log(file.path)
-      // const buffer = fs.readFileSync(file.path);
-      // const base64 = buffer.toString("base64");
-      // return { image: buffer };
-      return { url: file.path }
+      return { url: file.path };
     });
     try {
       const newClueCard = new ClueCardModel({
         word: req.body.word,
         date: req.body.date,
-        // images: reqName,
-        images: reqName
+        images: reqName,
       });
       const data = await newClueCard.save();
       res.send(data);
@@ -72,7 +65,7 @@ const AdminController = {
   },
   getTodaysWord: async (req, res) => {
     try {
-      const todayword = await ClueCardModel.findOne({ date: req.body.today })
+      const todayword = await ClueCardModel.findOne({ date: req.body.today });
       if (todayword) {
         res.send(todayword);
       } else {
@@ -100,15 +93,6 @@ const AdminController = {
   getAllWords: async (req, res) => {
     try {
       const data = await ClueCardModel.find({});
-      const queryData = data.map((item) => {
-        return {
-          id: item._id,
-          word: item.word,
-          imagecount: item.images.length,
-          date: item.date
-        }
-      })
-      // console.log(queryData)
       if (data) {
         res.status(200).send(data);
       } else {
@@ -124,8 +108,7 @@ const AdminController = {
     const word = req.body.word;
     const date = req.body.date;
     const reqfiles = req.files?.map((file) => {
-      const buffer = fs.readFileSync(file.path);
-      return { image: buffer };
+      return { url: file.path };
     });
     try {
       const data = await ClueCardModel.findByIdAndUpdate(
@@ -141,30 +124,31 @@ const AdminController = {
   },
   getImageById: async (req, res) => {
     try {
-
-      const data = await ClueCardModel.findById(req.body.entryId, { images: 1, _id: 0 })
-      res.send(data)
+      const data = await ClueCardModel.findById(req.body.entryId, {
+        images: 1,
+        _id: 0,
+      });
+      res.send(data);
     } catch (err) {
-      res.send(err)
+      res.send(err);
     }
   },
   deleteEntry: async (req, res) => {
     try {
-
-      const data = await ClueCardModel.findByIdAndDelete(req.body.entryId)
-      res.status(200).send(data)
+      const data = await ClueCardModel.findByIdAndDelete(req.body.entryId);
+      res.status(200).send(data);
     } catch (err) {
-      res.status(400).send(err)
+      res.status(400).send(err);
     }
   },
   logout: async (req, res) => {
     try {
       req.session.destroy((err) => {
-        res.send("logout")
-      })
+        res.send("logout");
+      });
     } catch (error) {
-      res.send(error)
+      res.send(error);
     }
-  }
+  },
 };
 export default AdminController;
