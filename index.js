@@ -27,6 +27,7 @@ app.use(
   })
 );
 
+app.use(express.static('uploads'))
 app.use(cookieParser());
 const store = new mongodbstore({
   uri: process.env.MONGO_URL,

@@ -6,12 +6,10 @@ import checkAdmin from "../middleware/checkAdmin.js";
 // multer setup
 export const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log("first step");
     cb(null, "uploads");
   },
   filename: function (req, file, cb) {
-    console.log("step-two");
-    cb(null, file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 export const upload = multer({ storage: storage });
@@ -25,12 +23,15 @@ Router.post(
   upload.array("clue-card", 4),
   AdminController.uploadImages
 );
-Router.get("/getimages", AdminController.getImages);
+Router.post("/gettodayword", AdminController.getTodaysWord);
 Router.put("/removeimage", AdminController.removeImage);
 Router.put(
   "/updateentry",
   upload.array("clue-card", 4),
   AdminController.updateEntry
 );
+Router.post("/getimages", AdminController.getImageById)
 Router.get("/getallwords", AdminController.getAllWords);
+Router.post("/deleteword", AdminController.deleteEntry)
+Router.get("/logout", AdminController.logout)
 export default Router;
