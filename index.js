@@ -9,6 +9,7 @@ import cors from "cors";
 import Router from "./Routes/routes.js";
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
+const PORT = process.env.PORT || 8000
 const app = express();
 app.use(express.json({ limit: "10mb" }));
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -18,12 +19,15 @@ mongoose
   .then(() => console.log("its connected mongo"))
   .catch((err) => console.log(err));
 
-app.use(
-  cors({
-    credentials: true,
-    origin: "http://localhost:3000",
-  })
-);
+
+app.use(cors())
+
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: "http://localhost:3000",
+//   })
+// );
 
 app.use(express.static("uploads"));
 app.use(cookieParser());
@@ -45,7 +49,8 @@ app.use(
 );
 app.use("/admin", Router);
 
-app.get("/", (req, res) => {
-  res.send("hlo");
-});
-app.listen(8000, () => console.log("app is running on port 8000"));
+if (process.env.NODE_ENV == "production") {
+  app.use(express.static(""))
+}
+
+app.listen(PORT, () => console.log(`app is running on port ${PORT}`));

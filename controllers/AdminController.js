@@ -1,5 +1,6 @@
 import AdminModel from "../models/AdminScheema.js";
 import ClueCardModel from "../models/ClueCardScheema.js";
+import fs from 'fs'
 const AdminController = {
   addAdmin: async (req, res) => {
     try {
@@ -77,17 +78,35 @@ const AdminController = {
   },
   removeImage: async (req, res) => {
     try {
+
       const deleteone = await ClueCardModel.findByIdAndUpdate(
         req.body.entryId,
 
         {
           $pull: { images: { _id: req.body.imageId } },
         },
-        { new: true }
+        { new: true },
+        (err, doc, res1) => {
+          if (err) {
+            console.log(err)
+          } else {
+            fs.unlink(req.body.url, (err) => {
+              return
+            })
+          }
+        }
       );
       res.send(deleteone);
+
+
+
+
+
+
     } catch (error) {
+
       res.send(error);
+
     }
   },
   getAllWords: async (req, res) => {
@@ -103,8 +122,8 @@ const AdminController = {
     }
   },
   updateEntry: async (req, res) => {
-    console.log(req.body);
-    console.log(req.files);
+    // console.log(req.body);
+    // console.log(req.files);
     const word = req.body.word;
     const date = req.body.date;
     const reqfiles = req.files?.map((file) => {
