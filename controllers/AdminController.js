@@ -53,13 +53,23 @@ const AdminController = {
       return { url: file.path };
     });
     try {
-      const newClueCard = new ClueCardModel({
-        word: req.body.word,
-        date: req.body.date,
-        images: reqName,
-      });
-      const data = await newClueCard.save();
-      res.send(data);
+      if (req.body.word) {
+        if (req.body.date) {
+
+          const newClueCard = new ClueCardModel({
+            word: req.body.word,
+            date: req.body.date,
+            images: reqName,
+          });
+          const data = await newClueCard.save();
+
+          res.send(data);
+        } else {
+          throw "date is required"
+        }
+      } else {
+        throw "Word is Required"
+      }
     } catch (error) {
       res.status(400).send(error);
     }
