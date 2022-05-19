@@ -15,6 +15,7 @@ export const storage = multer.diskStorage({
 export const upload = multer({ storage: storage });
 const Router = express.Router();
 
+
 Router.post("/register", AdminController.addAdmin);
 Router.post("/login", AdminController.adminLogin);
 Router.get("/retainlogin", checkAdmin, AdminController.retainAdminLogin);

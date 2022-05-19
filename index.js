@@ -9,25 +9,25 @@ import cors from "cors";
 import Router from "./Routes/routes.js";
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 6237
 const app = express();
 app.use(express.json({ limit: "10mb" }));
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
+// setting the mongodb connection
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("its connected mongo"))
   .catch((err) => console.log(err));
 
 
-app.use(cors())
 
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: "http://localhost:3000",
-//   })
-// );
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+);
 
 app.use(express.static("uploads"));
 app.use(cookieParser());
@@ -41,16 +41,19 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store,
+
     cookie: {
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 2, //user will logout in 2 hours
     },
   })
 );
+// app.use("/", express.static('./build'))
+app.get('/', (req, res) => res.send("hi there"))
 app.use("/admin", Router);
 
-if (process.env.NODE_ENV == "production") {
-  app.use(express.static(""))
-}
+
 
 app.listen(PORT, () => console.log(`app is running on port ${PORT}`));

@@ -2,6 +2,7 @@ import AdminModel from "../models/AdminScheema.js";
 import ClueCardModel from "../models/ClueCardScheema.js";
 import fs from 'fs'
 const AdminController = {
+
   addAdmin: async (req, res) => {
     try {
       const { name, username, email, password } = req.body;
@@ -100,6 +101,7 @@ const AdminController = {
           if (err) {
             console.log(err)
           } else {
+            // to remove the image from server
             fs.unlink(req.body.url, (err) => {
               return
             })
@@ -107,11 +109,6 @@ const AdminController = {
         }
       );
       res.send(deleteone);
-
-
-
-
-
 
     } catch (error) {
 

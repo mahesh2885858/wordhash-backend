@@ -3,6 +3,7 @@ const checkAdmin = (req, res, next) => {
   if (adminId) {
     req.id = adminId;
   } else {
+    res.status(400).send("no id")
     return;
   }
   next();

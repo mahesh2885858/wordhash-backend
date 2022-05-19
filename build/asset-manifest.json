@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.306b2d3b.css",
+    "main.js": "/static/js/main.191833d4.js",
+    "static/js/377.5df5a9a3.chunk.js": "/static/js/377.5df5a9a3.chunk.js",
+    "static/media/WordBank.txt": "/static/media/WordBank.0acea1c53401a89146ab.txt",
+    "service-worker.js": "/service-worker.js",
+    "index.html": "/index.html",
+    "main.306b2d3b.css.map": "/static/css/main.306b2d3b.css.map",
+    "main.191833d4.js.map": "/static/js/main.191833d4.js.map",
+    "377.5df5a9a3.chunk.js.map": "/static/js/377.5df5a9a3.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.306b2d3b.css",
+    "static/js/main.191833d4.js"
+  ]
+}
