@@ -58,7 +58,7 @@ const AdminController = {
         if (req.body.date) {
 
           const newClueCard = new ClueCardModel({
-            word: req.body.word,
+            word: req.body.word.toLowerCase(),
             date: req.body.date,
             images: reqName,
           });

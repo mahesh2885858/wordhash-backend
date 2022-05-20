@@ -6,7 +6,11 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
+import path from "path"
+import fs from "fs"
 import Router from "./Routes/routes.js";
+import ClueCardModel from "./models/ClueCardScheema.js"
+import moment from 'moment'
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
 const PORT = process.env.PORT || 6237
@@ -50,8 +54,11 @@ app.use(
     },
   })
 );
-// app.use("/", express.static('./build'))
-app.get('/', (req, res) => res.send("hi there"))
+
+
+
+app.use("/", express.static('./build'))
+app.get("/", (req, res) => res.send("hi there"))
 app.use("/admin", Router);
 
 
