@@ -8,6 +8,7 @@ import session from "express-session";
 import cors from "cors";
 import path from "path"
 import fs from "fs"
+import { fileURLToPath } from "url";
 import Router from "./Routes/routes.js";
 import ClueCardModel from "./models/ClueCardScheema.js"
 import moment from 'moment'
@@ -48,8 +49,8 @@ app.use(
 
     cookie: {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      // secure: true,
+      // sameSite: "none",
       maxAge: 1000 * 60 * 60 * 2, //user will logout in 2 hours
     },
   })
@@ -57,8 +58,36 @@ app.use(
 
 
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+app.get("/", async (req, res, next) => {
+  const indexPath = path.resolve(__dirname, "./build", "index.html")
+
+  try {
+    const todayword = await ClueCardModel.findOne({ date: moment().format("MM/DD/YYYY") });
+
+    if (todayword) {
+
+      const randomNumber = Math.floor(Math.random() * todayword.images.length);
+      const cluecardurl = todayword.images[randomNumber].url.split("/").pop();
+      fs.readFile(indexPath, "utf8", (err, data) => {
+        if (err) {
+          console.log(err)
+          throw ("page not found")
+        }
+        data = data.replace("PLACEHOLDER", cluecardurl).replace("PLACEHOLDER", cluecardurl)
+        res.send(data)
+      })
+    } else {
+      throw "the images is not found";
+    }
+  } catch (err) {
+    res.send(err);
+  }
+
+})
 app.use("/", express.static('./build'))
-app.get("/", (req, res) => res.send("hi there"))
+// app.get("/", (req, res) => res.send("hi there"))
 app.use("/admin", Router);
 
 
