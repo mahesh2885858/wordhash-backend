@@ -69,14 +69,26 @@ app.get("/", async (req, res, next) => {
     if (todayword) {
 
       const randomNumber = Math.floor(Math.random() * todayword.images.length);
-      const cluecardurl = todayword.images[randomNumber].url.split("/").pop();
+
+
       fs.readFile(indexPath, "utf8", (err, data) => {
-        if (err) {
-          console.log(err)
-          throw ("page not found")
+        if (todayword.images.length > 0) {
+          if (err) {
+            console.log(err)
+            throw ("page not found")
+          }
+          const cluecardurl = todayword.images[randomNumber].url.split("/").pop();
+          if (cluecardurl) {
+            const timestamps = new Date().getTime()
+
+            data = data.replace("PLACEHOLDER", cluecardurl).replace("PLACEHOLDER", cluecardurl).replace("TIMESTAMPS", timestamps)
+            res.send(data)
+          } else {
+            res.send(data)
+          }
+        } else {
+          res.send(data)
         }
-        data = data.replace("PLACEHOLDER", cluecardurl).replace("PLACEHOLDER", cluecardurl)
-        res.send(data)
       })
     } else {
       throw "the images is not found";
