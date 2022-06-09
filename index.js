@@ -6,15 +6,15 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
-import path from "path"
-import fs from "fs"
+import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import Router from "./Routes/routes.js";
-import ClueCardModel from "./models/ClueCardScheema.js"
-import moment from 'moment'
+import ClueCardModel from "./models/ClueCardScheema.js";
+import moment from "moment";
 const mongodbstore = MongoDBStore(session);
 dotenv.config();
-const PORT = process.env.PORT || 6237
+const PORT = process.env.PORT || 6237;
 const app = express();
 app.use(express.json({ limit: "10mb" }));
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -27,7 +27,11 @@ mongoose
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "http://localhost:3001", "http://192.168.29.17:3001"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://192.168.29.17:3000",
+    ],
     // origin: "*"
   })
 );
@@ -57,13 +61,11 @@ app.use(
 // const dummyRoot = express.Router()
 // dummyRoot.get("/*", async (req, res, next) => {
 
-
 //   const todayword = await ClueCardModel.findOne({ date: moment().format("MM/DD/YYYY") });
 
 //   if (todayword) {
 
 //     const randomNumber = Math.floor(Math.random() * todayword.images.length);
-
 
 //     if (todayword.images.length > 0) {
 
@@ -106,8 +108,6 @@ app.use(
 
 //     </html>
 
-
-
 //       `)
 //     }
 //   } else {
@@ -115,59 +115,61 @@ app.use(
 //   }
 // })
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.get("/", async (req, res, next) => {
-  console.log(req.headers["user-agent"])
-  const indexPath = path.resolve(__dirname, "./build", "index.html")
+  console.log(req.headers["user-agent"]);
+  const indexPath = path.resolve(__dirname, "./build", "index.html");
 
   try {
-    const todayword = await ClueCardModel.findOne({ date: moment().format("MM/DD/YYYY") });
+    const todayword = await ClueCardModel.findOne({
+      date: moment().format("MM/DD/YYYY"),
+    });
 
     if (todayword) {
-
       const randomNumber = Math.floor(Math.random() * todayword.images.length);
-
 
       fs.readFile(indexPath, "utf8", (err, data) => {
         if (todayword.images.length > 0) {
           if (err) {
-            console.log(err)
-            throw ("page not found")
+            console.log(err);
+            throw "page not found";
           }
-          const cluecardurl = todayword.images[randomNumber].url.split("/").pop();
+          const cluecardurl = todayword.images[randomNumber].url
+            .split("/")
+            .pop();
           if (cluecardurl) {
-            const timestamps = new Date().getTime()
-            data = data.replace("PLACEHOLDER", cluecardurl).replace("PLACEHOLDER", cluecardurl).replace("TIMESTAMPS", timestamps)
-            res.send(data)
+            const timestamps = new Date().getTime();
+            data = data
+              .replace("PLACEHOLDER", cluecardurl)
+              .replace("PLACEHOLDER", cluecardurl)
+              .replace("TIMESTAMPS", timestamps);
+            res.send(data);
           } else {
-            res.send(data)
+            res.send(data);
           }
         } else {
-          res.send(data)
+          res.send(data);
         }
-      })
+      });
     } else {
       fs.readFile(indexPath, "utf8", (err, data) => {
         if (err) {
-          console.log(err)
-          throw 'page  not found'
+          console.log(err);
+          throw "page  not found";
         } else {
-          res.send(data)
+          res.send(data);
         }
-      })
+      });
       // throw "the images is not found";
     }
   } catch (err) {
     res.send(err);
   }
-
-})
-app.use("/", express.static('./build'))
+});
+app.use("/", express.static("./build"));
 // app.get("/", (req, res) => res.send("hi there"))
 // app.use("/deepend", dummyRoot)
 app.use("/admin", Router);
-
-
 
 app.listen(PORT, () => console.log(`app is running on port ${PORT}`));
