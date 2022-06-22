@@ -118,7 +118,8 @@ app.use(
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.get("/", async (req, res, next) => {
-  console.log(req.headers["user-agent"]);
+  console.log(req.headers["user-agent"], "time : " + new Date().toLocaleString("en-US", "Asia/kolkata"));
+  console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
   const indexPath = path.resolve(__dirname, "./build", "index.html");
 
   try {
@@ -171,5 +172,5 @@ app.use("/", express.static("./build"));
 // app.get("/", (req, res) => res.send("hi there"))
 // app.use("/deepend", dummyRoot)
 app.use("/admin", Router);
-    
+
 app.listen(PORT, () => console.log(`app is running on port ${PORT}`));
