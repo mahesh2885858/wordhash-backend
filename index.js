@@ -31,6 +31,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "http://192.168.29.17:3000",
+      "http://192.168.29.17:3001",
     ],
     // origin: "*"
   })
