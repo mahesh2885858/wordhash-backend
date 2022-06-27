@@ -1,15 +1,24 @@
 import AdminModel from "../models/AdminScheema.js";
 import ClueCardModel from "../models/ClueCardScheema.js";
+import bcrypt from 'bcrypt'
 import fs from 'fs'
 const AdminController = {
 
   addAdmin: async (req, res) => {
     try {
       const { name, username, email, password } = req.body;
+      const userWithSameUserName = await AdminModel.findOne({ username })
+      if (!username || !name || !email || !password) throw "please provide all details"
+      if (userWithSameUserName) {
+        throw 'The Username is already Taken choose another one'
+      } else {
 
-      const admin = new AdminModel({ name, username, email, password });
-      const result = await admin.save();
-      res.send(result);
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        const admin = new AdminModel({ name, username, email, password: hashedPassword });
+        const result = await admin.save();
+        res.send(result);
+      }
     } catch (err) {
       res.send(err);
     }
@@ -20,7 +29,7 @@ const AdminController = {
       if (username && password) {
         const user = await AdminModel.findOne({ username });
         if (user) {
-          if (user.password === password) {
+          if (await bcrypt.compare(password, user.password)) {
             req.session.adminId = user._id;
             res.send(user);
           } else {
